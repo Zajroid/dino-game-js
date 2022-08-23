@@ -1,4 +1,5 @@
-import { setupGround, updateGround } from './ground.js'
+import { setupGround, updateGround } from "./ground.js";
+import { updateDino, setupDino } from "./dino.js";
 
 const WORLD_WIDTH = 100;
 const WORLD_HEIGHT = 30;
@@ -6,11 +7,11 @@ const SPEED_SCALE_INCREASE = 0.00001;
 
 const worldElem = document.querySelector("[data-world]");
 const scoreElem = document.querySelector("[data-score]");
+const startScreenElem = document.querySelector("[data-start-screen]");
 
 setPixelToWorldScale();
 window.addEventListener("resize", setPixelToWorldScale);
-document.addEventListener("keydown", handleStart, { once: true })
-
+document.addEventListener("keydown", handleStart, { once: true });
 
 let lastTime;
 let speedScale;
@@ -19,11 +20,12 @@ function update(time) {
   if (lastTime == null) {
     lastTime = time;
     window.requestAnimationFrame(update);
-    return
+    return;
   }
   const delta = time - lastTime;
 
   updateGround(delta, speedScale);
+  updateDino(delta, speedScale);
   updateSpeedScale(delta);
   updateScore(delta);
 
@@ -32,24 +34,23 @@ function update(time) {
 }
 window.requestAnimationFrame(update);
 
-
 function updateSpeedScale(delta) {
-  speedScale += delta * SPEED_SCALE_INCREASE
+  speedScale += delta * SPEED_SCALE_INCREASE;
 }
 
 function updateScore(delta) {
-  score += delta * 0.01
-  scoreElem.textContent = Math.floor(score)
+  score += delta * 0.01;
+  scoreElem.textContent = Math.floor(score);
 }
 
-
 function handleStart() {
-  lastTime = null
-  speedScale = 1
-  score = 0
-  setupGround()
-  startScreenElem.classList.add("hide")
-  window.requestAnimationFrame(update)
+  lastTime = null;
+  speedScale = 1;
+  score = 0;
+  setupGround();
+  setupDino();
+  startScreenElem.classList.add("hide");
+  window.requestAnimationFrame(update);
 }
 
 function setPixelToWorldScale() {
